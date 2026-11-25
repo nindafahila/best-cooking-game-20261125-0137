@@ -1,0 +1,381 @@
+/* Warung Kilat — tampilan dapur Nusantara: kayu hangat, ubin krem, dan kartu pesanan. */
+
+* { box-sizing: border-box; }
+
+:root {
+  --wood: #7a4a21;
+  --wood-dark: #5d3413;
+  --cream: #fff8ec;
+  --wall: #f6e3c5;
+  --accent: #ff7a1a;
+  --accent-dark: #e56300;
+  --green: #43a047;
+  --amber: #fb8c00;
+  --red: #e53935;
+  --ink: #3d2b1a;
+}
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  background: #2b1a0e;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: var(--ink);
+}
+
+#game {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 14px;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 46px, rgba(122, 74, 33, 0.06) 46px 48px),
+    linear-gradient(180deg, #fbeed3 0%, var(--wall) 100%);
+  overflow: hidden;
+}
+
+.hidden { display: none !important; }
+
+/* ---- HUD ---- */
+#hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(180deg, var(--wood), var(--wood-dark));
+  color: var(--cream);
+  border-radius: 14px;
+  padding: 8px 18px;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.25);
+}
+
+.brand { font-size: 26px; font-weight: 900; letter-spacing: 1px; }
+
+.hud-center { text-align: center; }
+
+.hud-label { font-size: 10px; letter-spacing: 2px; opacity: 0.8; }
+
+#hud-time { font-size: 34px; font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; }
+#hud-time.low { color: #ff5252; animation: blink 0.8s steps(2) infinite; }
+
+@keyframes blink { 50% { opacity: 0.45; } }
+
+.hud-right { display: flex; align-items: center; gap: 16px; font-size: 18px; font-weight: 700; }
+.hud-stat { display: flex; flex-direction: column; align-items: center; }
+#hud-score { font-size: 24px; }
+#hud-combo { color: #ffd54f; }
+.heart { font-size: 18px; }
+.heart.lost { filter: grayscale(1); opacity: 0.5; }
+
+/* ---- Bagian-bagian ---- */
+.section-title { font-size: 14px; font-weight: 800; letter-spacing: 1px; margin-bottom: 6px; }
+.section-hint { font-weight: 400; opacity: 0.65; letter-spacing: 0; }
+
+/* ---- Papan pesanan ---- */
+#order-board {
+  display: flex;
+  gap: 10px;
+  min-height: 104px;
+}
+
+.no-orders {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(61, 43, 26, 0.55);
+  font-style: italic;
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 12px;
+}
+
+.order-card {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fffdf7;
+  border: 2px solid #e8d5b5;
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.12);
+  transition: transform 0.08s ease, border-color 0.15s ease;
+}
+
+.order-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+.order-card.crit { border-color: var(--red); animation: shake 0.5s ease infinite; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+.order-dish { font-size: 44px; line-height: 1; }
+.order-info { flex: 1; min-width: 0; }
+.order-name { font-size: 17px; font-weight: 800; }
+.order-needs { font-size: 18px; letter-spacing: 2px; margin: 2px 0 6px; }
+.order-price { font-size: 15px; font-weight: 800; color: var(--accent-dark); }
+
+.patience { height: 10px; background: #eee0c8; border-radius: 6px; overflow: hidden; }
+.patience-fill { height: 100%; border-radius: 6px; background: var(--green); transition: width 0.3s linear; }
+.order-card.warn .patience-fill { background: var(--amber); }
+.order-card.crit .patience-fill { background: var(--red); }
+
+/* ---- Dapur ---- */
+#kitchen { display: flex; gap: 12px; flex: 1; min-height: 0; }
+
+.kitchen-col {
+  background: linear-gradient(180deg, #c98d54, #a96f3c);
+  border-radius: 14px;
+  padding: 10px 12px;
+  color: #fff3dd;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.25), 0 3px 0 rgba(0, 0, 0, 0.2);
+}
+
+#stove-col { flex: 1.15; }
+#plate-col { flex: 1.3; }
+#ready-col { flex: 1; }
+
+#stove-slots { display: flex; flex-direction: column; gap: 8px; }
+
+.burner {
+  background: rgba(43, 26, 14, 0.55);
+  border-radius: 10px;
+  padding: 8px 10px;
+  text-align: center;
+}
+
+.burner.empty { opacity: 0.65; }
+.burner-ring { font-size: 30px; line-height: 1; }
+.burner-dish { font-size: 15px; font-weight: 700; margin-top: 2px; }
+.burner-label { font-size: 12px; opacity: 0.9; margin-top: 2px; }
+.burner.done { outline: 3px solid #8dff9e; animation: glow 0.7s ease infinite alternate; }
+.burner.danger { outline: 3px solid var(--red); }
+
+@keyframes glow { from { outline-color: #8dff9e; } to { outline-color: #2fbf4a; } }
+
+.cook-bar { height: 10px; background: rgba(0, 0, 0, 0.4); border-radius: 6px; overflow: hidden; margin-top: 6px; }
+.cook-fill { height: 100%; background: linear-gradient(90deg, #ffb300, #ff5722); transition: width 0.2s linear; }
+.burner.done .cook-fill { background: var(--green); }
+
+.btn-take {
+  margin-top: 6px;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 800;
+  background: #8dff9e;
+  color: #14532d;
+  cursor: pointer;
+}
+.btn-take:disabled { background: rgba(255, 255, 255, 0.25); color: rgba(255, 255, 255, 0.6); cursor: default; }
+
+/* Piring racikan */
+#plate-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 76px;
+  background: #fffdf7;
+  border-radius: 50% / 12%;
+  border: 3px solid #e8d5b5;
+  padding: 10px 14px;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+}
+
+.plate-empty { color: rgba(61, 43, 26, 0.45); font-style: italic; }
+.plate-chip { font-size: 30px; border-radius: 50%; padding: 4px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15); }
+
+#plate-hint { font-size: 13px; margin: 8px 0; min-height: 18px; color: #fff3dd; }
+.plate-actions { display: flex; gap: 8px; }
+
+.btn-primary {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: 900;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 3px 0 var(--accent-dark);
+}
+.btn-primary:hover:not(:disabled) { filter: brightness(1.07); }
+.btn-primary:disabled { background: #b8a88f; box-shadow: 0 3px 0 #97876c; cursor: default; }
+.btn-primary.big { font-size: 20px; padding: 14px 30px; margin-top: 14px; }
+
+.btn-ghost {
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 700;
+  background: transparent;
+  color: #fff3dd;
+  cursor: pointer;
+}
+.btn-ghost:disabled { opacity: 0.4; cursor: default; }
+.btn-ghost.small { padding: 4px 10px; font-size: 12px; }
+
+/* Piring siap saji */
+#ready-dish { min-height: 76px; }
+.ready-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 76px;
+  background: rgba(255, 255, 255, 0.35);
+  border: 2px dashed rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  color: rgba(255, 243, 221, 0.9);
+  font-style: italic;
+  font-size: 14px;
+}
+
+.ready-plate {
+  background: #fffdf7;
+  border-radius: 12px;
+  padding: 8px;
+  text-align: center;
+  color: var(--ink);
+  border: 3px solid #ffd54f;
+  animation: pop 0.25s ease;
+}
+
+@keyframes pop { from { transform: scale(0.85); } to { transform: scale(1); } }
+
+.ready-emoji { font-size: 40px; line-height: 1; }
+.ready-name { font-size: 16px; font-weight: 800; }
+.ready-star { font-size: 13px; font-weight: 800; color: var(--accent-dark); }
+#ready-hint { font-size: 13px; margin-top: 8px; min-height: 18px; }
+
+/* ---- Meja bahan ---- */
+#ingredient-counter {
+  display: flex;
+  gap: 8px;
+}
+
+.ingredient {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: var(--ing-color, #fff);
+  border: 2px solid rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  padding: 8px 4px 6px;
+  cursor: pointer;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.18);
+  transition: transform 0.07s ease;
+}
+.ingredient:hover { transform: translateY(-2px); }
+.ingredient:active { transform: translateY(1px); box-shadow: 0 1px 0 rgba(0, 0, 0, 0.18); }
+.ing-emoji { font-size: 34px; line-height: 1; }
+.ing-name { font-size: 12px; font-weight: 700; }
+.ingredient kbd {
+  font-size: 10px;
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 4px;
+  padding: 1px 6px;
+  color: #fff;
+}
+
+/* ---- Footer, toast, efek ---- */
+#foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: rgba(61, 43, 26, 0.65);
+}
+#foot .btn-ghost { color: var(--ink); border-color: rgba(61, 43, 26, 0.4); }
+
+#toast {
+  position: absolute;
+  left: 50%;
+  bottom: 64px;
+  transform: translate(-50%, 20px);
+  background: rgba(43, 26, 14, 0.92);
+  color: var(--cream);
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 30;
+}
+#toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+#fx-layer { position: absolute; inset: 0; pointer-events: none; z-index: 25; overflow: hidden; }
+.fx-pop {
+  position: absolute;
+  font-size: 36px;
+  font-weight: 900;
+  color: #ffd54f;
+  -webkit-text-stroke: 1px rgba(90, 50, 0, 0.9);
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.6), 0 0 12px rgba(0, 0, 0, 0.35);
+  animation: floatUp 1.2s ease-out forwards;
+}
+
+.fx-pop.sticky { animation: none; opacity: 1; }
+@keyframes floatUp {
+  from { opacity: 0; transform: translateY(12px) scale(0.8); }
+  20% { opacity: 1; transform: translateY(0) scale(1.1); }
+  to { opacity: 0; transform: translateY(-64px) scale(1); }
+}
+
+/* ---- Layar judul / akhir ---- */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(43, 26, 14, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+  backdrop-filter: blur(2px);
+}
+
+.overlay-card {
+  background: var(--cream);
+  border-radius: 20px;
+  padding: 28px 36px;
+  max-width: 560px;
+  text-align: center;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.overlay-card h1 { margin: 4px 0 2px; font-size: 40px; letter-spacing: 2px; color: var(--wood-dark); }
+.title-emoji { font-size: 56px; line-height: 1; }
+.tagline { font-size: 16px; margin: 4px 0 14px; color: rgba(61, 43, 26, 0.75); }
+
+.howto { text-align: left; display: flex; flex-direction: column; gap: 8px; font-size: 15px; }
+.howto-num {
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 900;
+  align-items: center;
+  justify-content: center;
+  margin-right: 6px;
+}
+.howto-note { font-size: 13px; color: rgba(61, 43, 26, 0.6); margin: 12px 0 0; }
+
+.final-stats { display: flex; justify-content: center; gap: 36px; margin: 10px 0 4px; }
+.final-num { font-size: 36px; font-weight: 900; color: var(--accent-dark); }
+.final-label { font-size: 11px; letter-spacing: 2px; color: rgba(61, 43, 26, 0.6); }

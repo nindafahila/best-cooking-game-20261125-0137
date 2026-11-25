@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Warung Kilat — Dapur Nusantara</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game">
+    <header id="hud">
+      <div class="brand">🍳 WARUNG KILAT</div>
+      <div class="hud-center">
+        <div class="hud-label">SISA WAKTU</div>
+        <div id="hud-time">3:00</div>
+      </div>
+      <div class="hud-right">
+        <div class="hud-stat"><span class="hud-label">SKOR</span><span id="hud-score">0</span></div>
+        <div class="hud-stat"><span id="hud-coins">🪙 0</span></div>
+        <div class="hud-stat"><span id="hud-hearts"></span></div>
+        <div class="hud-stat"><span id="hud-level">Level 1</span></div>
+        <div class="hud-stat"><span id="hud-combo"></span></div>
+      </div>
+    </header>
+
+    <section id="orders">
+      <div class="section-title">📋 PAPAN PESANAN <span class="section-hint">— klik pesanan untuk menyajikan hidangan yang cocok</span></div>
+      <div id="order-board"></div>
+    </section>
+
+    <section id="kitchen">
+      <div class="kitchen-col" id="stove-col">
+        <div class="section-title">🔥 KOMPOR</div>
+        <div id="stove-slots"></div>
+      </div>
+      <div class="kitchen-col" id="plate-col">
+        <div class="section-title">🍽️ PIRING RACIKAN</div>
+        <div id="plate-items"></div>
+        <div id="plate-hint"></div>
+        <div class="plate-actions">
+          <button id="btn-cook" class="btn-primary" disabled>🔥 MASAK</button>
+          <button id="btn-clear-plate" class="btn-ghost" disabled>🗑️ Buang</button>
+        </div>
+      </div>
+      <div class="kitchen-col" id="ready-col">
+        <div class="section-title">✅ SIAP SAJI</div>
+        <div id="ready-dish"></div>
+        <div id="ready-hint"></div>
+      </div>
+    </section>
+
+    <section id="counter">
+      <div class="section-title">🧺 MEJA BAHAN <span class="section-hint">— klik bahan atau tekan tombol 1–0</span></div>
+      <div id="ingredient-counter"></div>
+    </section>
+
+    <footer id="foot">
+      <span>⌨️ 1–0 pilih bahan · C masak · X buang piring · M suara</span>
+      <button id="btn-mute" class="btn-ghost small">🔊 Suara Nyala</button>
+    </footer>
+
+    <div id="toast"></div>
+    <div id="fx-layer"></div>
+
+    <div id="screen-title" class="overlay">
+      <div class="overlay-card">
+        <div class="title-emoji">🍳</div>
+        <h1>WARUNG KILAT</h1>
+        <p class="tagline">Dapur Nusantara — masak cepat, sajikan tepat!</p>
+        <div class="howto">
+          <div><span class="howto-num">1</span> Pelanggan memesan di papan — lihat bahan yang dibutuhkan.</div>
+          <div><span class="howto-num">2</span> Klik bahan di meja untuk meracik, lalu tekan MASAK.</div>
+          <div><span class="howto-num">3</span> Angkat saat matang, sajikan sebelum pelanggan kehabisan sabar!</div>
+        </div>
+        <p class="howto-note">Shift 3 menit · 3 hati · kombo menaikkan skor · hidangan dingin (Gado-Gado, Es Teh) tak perlu dimasak.</p>
+        <button id="btn-start" class="btn-primary big">▶ MULAI SHIFT</button>
+      </div>
+    </div>
+
+    <div id="screen-over" class="overlay hidden">
+      <div class="overlay-card">
+        <div class="title-emoji">🏁</div>
+        <h1>SHIFT SELESAI</h1>
+        <p id="final-reason" class="tagline"></p>
+        <div class="final-stats">
+          <div><div class="final-num" id="final-score">0</div><div class="final-label">SKOR</div></div>
+          <div><div class="final-num" id="final-served">0</div><div class="final-label">HIDANGAN TERSAJI</div></div>
+          <div><div class="final-num" id="final-best-combo">x0</div><div class="final-label">KOMBO TERBAIK</div></div>
+        </div>
+        <button id="btn-restart" class="btn-primary big">🔄 MAIN LAGI</button>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
